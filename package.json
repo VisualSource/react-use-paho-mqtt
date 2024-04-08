@@ -28,7 +28,8 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "prettier": "prettier -c ./lib ./src",
-    "prettier:fix": "prettier -w ./lib ./src"
+    "prettier:fix": "prettier -w ./lib ./src",
+    "prepublishOnly": "pnpm build:lib"
   },
   "devDependencies": {
     "@mxssfd/typedoc-theme": "^1.1.3",

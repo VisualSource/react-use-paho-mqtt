@@ -1,0 +1,42 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  gap: 1rem;
+}
+
+.input-form {
+  display: flex;
+  gap: 2rem;
+}
+
+.message-box {
+  flex-grow: 1;
+  max-height: 50vh;
+  overflow-y: scroll;
+  border: 1px solid #646cff;
+  background-color: #646cff10;
+  border-radius: 8px;
+  padding: 1rem;
+}
+.message-box > div {
+  border-bottom: 1px solid #ffffff50;
+  text-align: left;
+  padding: 0.1rem 0 0.1rem 0.3rem;
+}
+.message-box > div:last-child {
+  border-bottom: 1px solid transparent;
+}
+
+.message-box > div > span {
+  opacity: 0.7;
+}
+
+.input-form-container {
+  display: flex;
+  justify-content: center;
+}

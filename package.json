@@ -1,0 +1,53 @@
+{
+  "name": "react-use-paho-mqtt",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "React Wrapper for the the javascript Paho MQTT library",
+  "files": [
+    "dist"
+  ],
+  "types": "./dist/react-use-paho-mqtt.d.ts",
+  "module": "./dist/react-use-paho-mqtt.js",
+  "exports": {
+    "import": "./dist/react-use-paho-mqtt.js"
+  },
+  "scripts": {
+    "test": "vitest",
+    "docs": "typedoc lib/index.ts",
+    "dev": "vite",
+    "build": "tsc && vite build -- --demo",
+    "build:lib": "tsc --p ./tsconfig.build.json && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "prettier": "prettier -c ./lib ./src",
+    "prettier:fix": "prettier -w ./lib ./src"
+  },
+  "devDependencies": {
+    "@mxssfd/typedoc-theme": "^1.1.3",
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "^14.3.0",
+    "@types/node": "^20.12.5",
+    "@types/paho-mqtt": "^1.0.10",
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@typescript-eslint/eslint-plugin": "^7.2.0",
+    "@typescript-eslint/parser": "^7.2.0",
+    "@vitejs/plugin-react-swc": "^3.5.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.6",
+    "jsdom": "^24.0.0",
+    "prettier": "^3.2.5",
+    "react-dom": "^18.2.0",
+    "typedoc": "^0.25.13",
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0",
+    "vite-plugin-dts": "^3.8.1",
+    "vitest": "^1.4.0"
+  },
+  "peerDependencies": {
+    "paho-mqtt": ">=1",
+    "react": ">=18"
+  }
+}

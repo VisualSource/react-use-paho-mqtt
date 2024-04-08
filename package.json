@@ -1,7 +1,7 @@
 {
   "name": "@visualsource/react-use-paho-mqtt",
   "private": false,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "description": "React Wrapper for the the javascript Paho MQTT library",
   "readme": "README.md",
@@ -9,6 +9,12 @@
   "license": "MIT",
   "files": [
     "dist"
+  ],
+  "keywords": [
+    "mqtt",
+    "react",
+    "paho",
+    "useMqtt"
   ],
   "repository": {
     "type": "git",

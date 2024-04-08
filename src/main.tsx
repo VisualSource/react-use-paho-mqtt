@@ -6,7 +6,9 @@ import "./index.css";
 import { MQTTClient, MqttProvider } from "../lib";
 
 const client = new MQTTClient({
-  hostUri: "wss://test.mosquitto.org:8091/mqtt",
+  host: "test.mosquitto.org",
+  useSSL: true,
+  port: 8091,
   userName: "ro",
   password: "readonly",
 });

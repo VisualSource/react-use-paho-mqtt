@@ -95,12 +95,13 @@ export class MQTTClient extends EventTarget {
     port = 9001,
     path = "/mqtt",
     clientId = "mqtt-websocket-client",
+    hostUri,
     ...options
   }: MQTTClientOptions) {
     super();
     this.connectionOptions = options;
-    this.client = options?.hostUri
-      ? new MQTT.Client(options.hostUri, clientId)
+    this.client = hostUri
+      ? new MQTT.Client(hostUri, clientId)
       : new MQTT.Client(host, port, path, clientId);
     this.client.onConnectionLost = () => {
       this.isConnecting = false;
@@ -205,6 +206,7 @@ export class MQTTClient extends EventTarget {
   public mount(): void {
     this.#mountCount++;
     if (this.#mountCount !== 1) return;
+
     this.connect(this.connectionOptions);
   }
 

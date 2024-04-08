@@ -6,10 +6,9 @@ import "./index.css";
 import { MQTTClient, MqttProvider } from "../lib";
 
 const client = new MQTTClient({
-  port: 8091,
+  hostUri: "wss://test.mosquitto.org:8091/mqtt",
   userName: "ro",
   password: "readonly",
-  host: "test.mosquitto.org"
 });
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

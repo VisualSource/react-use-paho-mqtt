@@ -20,7 +20,7 @@ export default defineConfig(async ({ command, isPreview }): Promise<UserConfig> 
         entryPoints: ["lib/index.ts"],
         plugin: ["@mxssfd/typedoc-theme"],
         out: outputDir,
-        basePath: isRemote ? `${OUTDIR}/docs` : "/",
+        basePath: isRemote ? `${ID}/docs` : "/",
         theme: "my-theme"
 
       });
@@ -36,7 +36,7 @@ export default defineConfig(async ({ command, isPreview }): Promise<UserConfig> 
 
     return {
       plugins: [react()],
-      base: isRemote ? ID : "/",
+      base: isRemote ? `${ID}/demo` : "/",
       build: {
         emptyOutDir: true,
         outDir: isRemote ? `${OUTDIR}/demo` : undefined,

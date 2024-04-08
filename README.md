@@ -26,6 +26,14 @@ Install react-use-paho-mqtt
 // main.tsx
 import { MQTTClient, MqttProvider } from "@visualsource/react-use-paho-mqtt";
 
+const client = new MQTTClient({
+  host: "test.mosquitto.org",
+  useSSL: true,
+  port: 8091,
+  userName: "ro",
+  password: "readonly",
+});
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <MqttProvider client={client}>

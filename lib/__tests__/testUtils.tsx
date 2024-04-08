@@ -32,8 +32,10 @@ export const config = {
     port: 8080,
     clientId: "TEST_CLIENT",
     path: "/mqtt",
+    useSSL: false,
   } as MQTTClientOptions,
   encrypted_unauthenticated: {
+    useSSL: true,
     host: "test.mosquitto.org",
     port: 8081,
     clientId: "TEST_CLIENT",
@@ -46,8 +48,10 @@ export const config = {
     password: "readonly",
     clientId: "TEST_CLIENT",
     path: "/mqtt",
+    useSSL: false,
   } as MQTTClientOptions,
   encrypted_authenticated: {
+    useSSL: true,
     host: "test.mosquitto.org",
     port: 8091,
     userName: "ro",

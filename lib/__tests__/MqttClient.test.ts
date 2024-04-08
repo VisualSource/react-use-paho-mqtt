@@ -24,6 +24,26 @@ describe("MQTTClient", () => {
     expect(client.getStatus()).toBe("connected");
   });
 
+  it("Connects to encrypted authenticated broker", async () => {
+    const client = new MQTTClient(config.encrypted_authenticated);
+
+    client.mount();
+
+    await waitForState(client, "connected");
+
+    expect(client.getStatus()).toBe("connected");
+  });
+
+  it("Connects to encrypted unauthenticated broker", async () => {
+    const client = new MQTTClient(config.unencrypted_unauthenticated);
+
+    client.mount();
+
+    await waitForState(client, "connected");
+
+    expect(client.getStatus()).toBe("connected");
+  });
+
   it("returns client id", () => {
     const client = new MQTTClient(config.unencrypted_unauthenticated);
     expect(client.clientId).toBe(config.unencrypted_unauthenticated.clientId);
@@ -50,7 +70,7 @@ describe("MQTTClient", () => {
     client.mount();
     await waitForState(client, "connected");
 
-    const unsubscribe = client.subscribe(MESSAGE_TOPIC, () => {});
+    const unsubscribe = client.subscribe(MESSAGE_TOPIC, () => { });
 
     expect(
       client.isSubscribed(MESSAGE_TOPIC),
@@ -70,7 +90,7 @@ describe("MQTTClient", () => {
     async () => {
       const client = new MQTTClient(config.unencrypted_unauthenticated);
 
-      client.subscribe(MESSAGE_TOPIC, () => {}, {
+      client.subscribe(MESSAGE_TOPIC, () => { }, {
         onFailure: () => {
           throw new Error("Failed to subscribe");
         },

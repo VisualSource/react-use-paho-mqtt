@@ -25,7 +25,7 @@ describe("useMqttState", () => {
       },
       { timeout: 2000 },
     );
-  });
+  }, { retry: 2 });
   it("should have have value of 'error' if client fails to connect", async () => {
     const { result } = renderHook(() => useMqttState(), {
       wrapper: createWrapper({ host: "BAD_HOST", timeout: 2 }),

@@ -11,20 +11,20 @@ Install react-use-paho-mqtt
 #### NPM
 
 ```bash
-  npm install @VisaulSource/react-use-paho-mqtt paho-mqtt
+  npm install @visualsource/react-use-paho-mqtt paho-mqtt
 ```
 
 #### PNPM
 
 ```bash
-  pnpm add @VisaulSource/react-use-paho-mqtt paho-mqtt
+  pnpm add @visualsource/react-use-paho-mqtt paho-mqtt
 ```
 
 ## Usage/Examples
 
 ```tsx
 // main.tsx
-import { MQTTClient, MqttProvider } from "@VisualSource/react-use-paho-mqtt";
+import { MQTTClient, MqttProvider } from "@visualsource/react-use-paho-mqtt";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -39,7 +39,7 @@ import {
   useSubscription,
   useMqtt,
   type MessageEvent,
-} from "@VisualSource/react-use-paho-mqtt";
+} from "@visualsource/react-use-paho-mqtt";
 
 function App() {
   const mqtt = useMqtt();

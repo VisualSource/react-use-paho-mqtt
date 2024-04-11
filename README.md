@@ -11,13 +11,15 @@ Install react-use-paho-mqtt
 #### NPM
 
 ```bash
-  npm install @visualsource/react-use-paho-mqtt paho-mqtt @types/paho-mqtt
+  npm install @visualsource/react-use-paho-mqtt paho-mqtt
+  npm install @types/paho-mqtt -D
 ```
 
 #### PNPM
 
 ```bash
-  pnpm add @visualsource/react-use-paho-mqtt paho-mqtt @types/paho-mqtt
+  pnpm add @visualsource/react-use-paho-mqtt paho-mqtt 
+  pnpm add @types/paho-mqtt -D
 ```
 
 ## Usage/Examples

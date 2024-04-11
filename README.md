@@ -53,7 +53,7 @@ function App() {
   const mqtt = useMqtt();
   const onMessage = useCallback((ev: MessageEvent) => {
     console.log(ev);
-  });
+  },[]);
 
   useSubscription("/message/example", onMessage);
 

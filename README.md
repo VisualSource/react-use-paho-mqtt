@@ -54,7 +54,8 @@ import {
 function App() {
   const mqtt = useMqtt();
   const onMessage = useCallback((ev: MessageEvent) => {
-    console.log(ev);
+    const { payloadString, destinationName } = ev.detail;
+    console.log(`Topic ${destinationName}, Payload: ${payloadString}`)
   },[]);
 
   useSubscription("/message/example", onMessage);

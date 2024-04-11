@@ -21,9 +21,9 @@
     "url": "https://github.com/VisualSource/react-use-paho-mqtt"
   },
   "types": "./dist/index.d.ts",
-  "module": "./dist/react-use-paho-mqtt.js",
+  "module": "./dist/index.js",
   "exports": {
-    "import": "./dist/react-use-paho-mqtt.js"
+    "import": "./dist/index.js"
   },
   "scripts": {
     "test": "vitest",

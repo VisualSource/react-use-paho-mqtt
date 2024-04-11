@@ -1,9 +1,9 @@
 /// <reference types="vitest" />
-import TypeDoc from 'typedoc';
-import react from '@vitejs/plugin-react-swc';
 import { defineConfig, UserConfig } from 'vite';
+import react from '@vitejs/plugin-react-swc';
 import { resolve } from "node:path";
 import dts from 'vite-plugin-dts';
+import TypeDoc from 'typedoc';
 
 const ID = "/react-use-paho-mqtt";
 const OUTDIR = `../../dist${ID}`;
@@ -55,7 +55,8 @@ export default defineConfig(async ({ command, isPreview }): Promise<UserConfig> 
       emptyOutDir: true,
       lib: {
         entry: resolve(__dirname, "lib/index.ts"),
-        formats: ["es"]
+        formats: ["es"],
+        fileName: "index"
       },
       rollupOptions: {
         external: ["react", 'react/jsx-runtime', "paho-mqtt"],

@@ -20,7 +20,7 @@
     "type": "git",
     "url": "https://github.com/VisualSource/react-use-paho-mqtt"
   },
-  "types": "./dist/react-use-paho-mqtt.d.ts",
+  "types": "./dist/index.d.ts",
   "module": "./dist/react-use-paho-mqtt.js",
   "exports": {
     "import": "./dist/react-use-paho-mqtt.js"

@@ -26,6 +26,7 @@
   },
   "scripts": {
     "test": "vitest",
+    "test:cli": "vitest run",
     "build:docs": "typedoc lib/index.ts",
     "dev": "vite",
     "build": "tsc && vite build -- --demo",

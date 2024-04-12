@@ -24,9 +24,9 @@ jobs:
           node-version: "21"
           cache: "pnpm"
       - name: Setup dependencies
-        run: pnpm vitest run
+        run: pnpm install
       - name: Test before publish
-        run: pnpm test
+        run: pnpm test:cli
       - name: Publish to NPM
         uses: JS-DevTools/npm-publish@v3
         with:

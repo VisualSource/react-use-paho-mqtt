@@ -27,6 +27,8 @@ jobs:
         run: pnpm install
       - name: Test before publish
         run: pnpm test:cli
+      - name: Build library
+        run: pnpm build:lib
       - name: Publish to NPM
         uses: JS-DevTools/npm-publish@v3
         with:

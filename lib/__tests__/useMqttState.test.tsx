@@ -14,18 +14,22 @@ describe("useMqttState", () => {
       expect(result.current).toBe("connecting");
     });
   });
-  it("should change to 'connected' after client has connected", async () => {
-    const { result } = renderHook(() => useMqttState(), {
-      wrapper: createWrapper(config.unencrypted_unauthenticated),
-    });
+  it(
+    "should change to 'connected' after client has connected",
+    async () => {
+      const { result } = renderHook(() => useMqttState(), {
+        wrapper: createWrapper(config.unencrypted_unauthenticated),
+      });
 
-    await waitFor(
-      () => {
-        expect(result.current).toBe("connected");
-      },
-      { timeout: 2000 },
-    );
-  }, { retry: 2 });
+      await waitFor(
+        () => {
+          expect(result.current).toBe("connected");
+        },
+        { timeout: 2000 },
+      );
+    },
+    { retry: 2 },
+  );
   it("should have have value of 'error' if client fails to connect", async () => {
     const { result } = renderHook(() => useMqttState(), {
       wrapper: createWrapper({ host: "BAD_HOST", timeout: 2 }),

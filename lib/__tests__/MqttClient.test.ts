@@ -70,7 +70,7 @@ describe("MQTTClient", () => {
     client.mount();
     await waitForState(client, "connected");
 
-    const unsubscribe = client.subscribe(MESSAGE_TOPIC, () => { });
+    const unsubscribe = client.subscribe(MESSAGE_TOPIC, () => {});
 
     expect(
       client.isSubscribed(MESSAGE_TOPIC),
@@ -90,7 +90,7 @@ describe("MQTTClient", () => {
     async () => {
       const client = new MQTTClient(config.unencrypted_unauthenticated);
 
-      client.subscribe(MESSAGE_TOPIC, () => { }, {
+      client.subscribe(MESSAGE_TOPIC, () => {}, {
         onFailure: () => {
           throw new Error("Failed to subscribe");
         },

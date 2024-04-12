@@ -75,14 +75,46 @@ const SINGLE = "+";
 const ALL = "#";
 
 /**
- *
- * @event "state" The active state of the client
- * @event "filter:*" A message from the broker
+ * @fires MQTTClient#error
+ * @fires MQTTClient#filter
+ * @fires MQTTClient#state
  * @export
  * @class MQTTClient
  * @extends {EventTarget}
  */
 export class MQTTClient extends EventTarget {
+
+  /** 
+   * Error Event
+   * 
+   * @event
+   * @type {CustomEvent<Error>}
+   * @emits error
+   * @example client.addEventListener("error",(ev)=>{})
+  */
+  public static EVENT_ERROR = "error";
+  /** 
+   * State Event
+   * 
+   * @event 
+   * @description Emited when the client changes state.
+   * @emits state
+   * @type {StatusEvent}
+   * @example client.addEventListener("state",(ev)=>{})
+  */
+  public static EVENT_STATE = "state";
+
+  /** 
+   * Filter Event
+   * @event
+   * @emits filter:*
+   * @description Emited when a message from the broker is received
+   * @example client.addEventListener("filter:/topic/example",(ev)=>{})
+   * 
+  */
+  public static EVENT_FILTER = "filter";
+
+
   #mountCount: number = 0;
   private topics_with_wilds: Map<string, number> = new Map();
   private topics: Map<string, number> = new Map();
@@ -109,19 +141,19 @@ export class MQTTClient extends EventTarget {
     };
     this.client.onMessageArrived = (ev) => {
       if (this.topics.has(ev.destinationName)) {
-        return this.emit(`filter:${ev.destinationName}`, ev);
+        return this.emit(`${MQTTClient.EVENT_FILTER}:${ev.destinationName}`, ev);
       }
 
       for (const key of this.topics_with_wilds.keys()) {
         if (this.matches(key, ev.destinationName)) {
-          this.emit(`filter:${key}`, ev);
+          this.emit(`${MQTTClient.EVENT_FILTER}:${key}`, ev);
         }
       }
     };
   }
   /**
    * Match a wild topic string with a topic
-   *
+   * 
    * @see https://www.npmjs.com/package/mqtt-pattern
    * @param pattern
    * @param topic
@@ -155,7 +187,7 @@ export class MQTTClient extends EventTarget {
 
   private setState(type: Status, ctx: MQTT.WithInvocationContext | null) {
     this.status = type;
-    this.emit("state", { type, ctx });
+    this.emit(MQTTClient.EVENT_STATE, { type, ctx });
   }
 
   private addTopic(topic: string): void {
@@ -191,6 +223,11 @@ export class MQTTClient extends EventTarget {
     this.topics.set(topic, item - 1);
   }
 
+  /**
+   * Wrapper around `dispatchEvent` for sending custom events
+   * @param event 
+   * @param payload 
+   */
   private emit(event: string, payload: unknown): void {
     this.dispatchEvent(new CustomEvent(event, { detail: payload }));
   }
@@ -316,15 +353,15 @@ export class MQTTClient extends EventTarget {
     options?: MQTT.SubscribeOptions,
   ): Unsubscribe {
     // Have to type callback as EventListener because addVentListener only likes Event and not CustomEvent
-    this.addEventListener(`filter:${topic}`, callback as EventListener);
+    this.addEventListener(`${MQTTClient.EVENT_FILTER}:${topic}`, callback as EventListener);
     this.addTopic(topic);
     this.client.subscribe(topic, {
       ...options,
       onFailure: (ctx) => {
-        this.removeEventListener(`filter:${topic}`, callback as EventListener);
+        this.removeEventListener(`${MQTTClient.EVENT_FILTER}:${topic}`, callback as EventListener);
         this.removeTopic(topic);
         options?.onFailure?.call(this, ctx);
-        this.emit("error", new Error("Failed to subscribe"));
+        this.emit(MQTTClient.EVENT_ERROR, new Error("Failed to subscribe"));
       },
     });
 
@@ -333,7 +370,7 @@ export class MQTTClient extends EventTarget {
         options?.onFailure?.call(this, options?.invocationContext);
         return false;
       }
-      this.removeEventListener(`filter:${topic}`, callback as EventListener);
+      this.removeEventListener(`${MQTTClient.EVENT_FILTER}:${topic}`, callback as EventListener);
       this.removeTopic(topic);
       this.client.unsubscribe(topic, options);
       return true;

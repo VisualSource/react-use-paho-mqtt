@@ -95,15 +95,15 @@ Go to the project directory
 ```
 
 ```bash
-pnpm install
+  pnpm install
 ```
 
 ```bash
-pnpm build
+  pnpm build
 ```
 
 ```bash
-pnpm preview
+  pnpm preview
 ```
 
 ## Running Tests
@@ -111,7 +111,7 @@ pnpm preview
 To run tests, run the following command
 
 ```bash
-pnpm test
+  pnpm test
 ```
 
 ## Authors

@@ -1,42 +1,32 @@
 import MQTT from "paho-mqtt";
 
 /**
+ * @interface
  * Options for the connection to broker.
  */
 export interface MQTTClientOptions extends MQTT.ConnectionOptions {
   /**
    * The Messaging client identifier, between 1 and 23 characters in length.
    * @default "mqtt-websocket-client"
-   * @type {string}
-   * @memberof MQTTClientOptions
    */
   clientId?: string;
   /**
    * the address of the messaging server as a DNS name or dotted decimal IP address.
    * @default "localhost"
-   * @type {string}
-   * @memberof MQTTClientOptions
    */
   host?: string;
   /**
    * The port number to connect to
    * @default 9001
-   * @type {number}
-   * @memberof MQTTClientOptions
    */
   port?: number;
   /**
    * the path on the host to connect to - only used if host is not a URI.
    * @default "/mqtt"
-   * @type {string}
-   * @memberof MQTTClientOptions
    */
   path?: string;
   /**
    * The address of the messaging server as a fully qualified WebSocket URI
-   *
-   * @type {string}
-   * @memberof MQTTClientOptions
    */
   hostUri?: string;
 }
@@ -74,21 +64,11 @@ const SEPARATOR = "/";
 const SINGLE = "+";
 const ALL = "#";
 
-/**
- * @fires MQTTClient#error
- * @fires MQTTClient#filter
- * @fires MQTTClient#state
- * @export
- * @class MQTTClient
- * @extends {EventTarget}
- */
 export class MQTTClient extends EventTarget {
   /**
    * Error Event
    *
    * @event
-   * @type {CustomEvent<Error>}
-   * @emits error
    * @example client.addEventListener("error",(ev)=>{})
    */
   public static EVENT_ERROR = "error";
@@ -96,20 +76,18 @@ export class MQTTClient extends EventTarget {
    * State Event
    *
    * @event
-   * @description Emited when the client changes state.
-   * @emits state
-   * @type {StatusEvent}
    * @example client.addEventListener("state",(ev)=>{})
+   * 
+   *  Emited when the client changes state.
    */
   public static EVENT_STATE = "state";
 
   /**
    * Filter Event
    * @event
-   * @emits filter:*
-   * @description Emited when a message from the broker is received
    * @example client.addEventListener("filter:/topic/example",(ev)=>{})
    *
+   * Emited when a message from the broker is received.
    */
   public static EVENT_FILTER = "filter";
 
@@ -239,7 +217,6 @@ export class MQTTClient extends EventTarget {
    * trying to connect a seconed time in dev mode for react.
    *
    * @return {*}
-   * @memberof MQTTClient
    */
   public mount(): void {
     this.#mountCount++;
@@ -250,8 +227,6 @@ export class MQTTClient extends EventTarget {
 
   /**
    * On unmount disconnect client
-   *
-   * @memberof MQTTClient
    */
   public unmount(): void {
     this.#mountCount--;
@@ -263,7 +238,6 @@ export class MQTTClient extends EventTarget {
    * Get the status of mqtt client
    *
    * @return {Status}  {Status}
-   * @memberof MQTTClient
    */
   public getStatus(): Status {
     return this.status;
@@ -273,7 +247,6 @@ export class MQTTClient extends EventTarget {
    * Normal disconnect of this Messaging client from its server.
    *
    * @return {void}
-   * @memberof MQTTClient
    */
   public disconnect(): void {
     if (!this.client.isConnected() || this.isConnecting) return;
@@ -286,7 +259,6 @@ export class MQTTClient extends EventTarget {
    *
    * @param {Paho.MQTT.ConnectionOptions} [options={}]
    * @return {void}
-   * @memberof MQTTClient
    */
   public connect(options: MQTT.ConnectionOptions = {}): void {
     if (this.client.isConnected() || this.isConnecting) return;
@@ -315,7 +287,6 @@ export class MQTTClient extends EventTarget {
    * @param {Paho.MQTT.Qos} [qos=0] The Quality of Service used to deliver the message.
    * @param {boolean} [retained=false] If true, the message is to be retained by the server and delivered to both current and future subscriptions. If false the server only delivers the message to current subscribers, this is the default for new Messages. A received message has the retained boolean set to true if the message was published with the retained boolean set to true and the subscrption was made after the message has been published.
    * @return {boolean}  If the message was sent
-   * @memberof MQTTClient
    */
   public publish(
     topic: string,
@@ -336,7 +307,6 @@ export class MQTTClient extends EventTarget {
    * @param {string} topic A filter describing the destinations to receive messages from.
    * @param {SubscrptionCallback} callback Function for handling reveived messages
    * @return {Unsubscribe} Function to unsubscribe from messages, stop receiving messages sent to destinations described by the filter.
-   * @memberof MQTTClient
    */
 
   /**
@@ -346,7 +316,6 @@ export class MQTTClient extends EventTarget {
    * @param {SubscrptionCallback} callback Function for handling reveived messages
    * @param {Paho.MQTT.SubscribeOptions} [options] options for
    * @return {Unsubscribe} Function to unsubscribe from messages, stop receiving messages sent to destinations described by the filter.
-   * @memberof MQTTClient
    */
   public subscribe(
     topic: string,
@@ -395,7 +364,6 @@ export class MQTTClient extends EventTarget {
    * The server's DNS hostname or dotted decimal IP address.
    *
    * @readonly
-   * @memberof MQTTClient
    */
   public get host() {
     return this.client.host;
@@ -404,7 +372,6 @@ export class MQTTClient extends EventTarget {
    * The server's port.
    *
    * @readonly
-   * @memberof MQTTClient
    */
   public get port() {
     return this.client.port;
@@ -413,7 +380,6 @@ export class MQTTClient extends EventTarget {
    * The server's path.
    *
    * @readonly
-   * @memberof MQTTClient
    */
   public get path() {
     return this.client.path;
@@ -422,7 +388,6 @@ export class MQTTClient extends EventTarget {
    * The client id used when connecting to the server.
    *
    * @readonly
-   * @memberof MQTTClient
    */
   public get clientId() {
     return this.client.clientId;
@@ -432,7 +397,6 @@ export class MQTTClient extends EventTarget {
    * Start tracing.
    *
    * @return {void} {void}
-   * @memberof MQTTClient
    */
   public startTrace(): void {
     return this.client.startTrace();
@@ -440,7 +404,6 @@ export class MQTTClient extends EventTarget {
   /**
    * Stop tracing.
    * @return {void} {void}
-   * @memberof MQTTClient
    */
   public stopTrace(): void {
     this.client.stopTrace();
@@ -449,7 +412,6 @@ export class MQTTClient extends EventTarget {
    * Get the contents of the trace log.
    *
    * @return {unknown[]} tracebuffer containing the time ordered trace records.
-   * @memberof MQTTClient
    */
   public getTraceLog(): unknown[] {
     return this.client.getTraceLog();

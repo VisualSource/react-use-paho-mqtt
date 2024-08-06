@@ -18,11 +18,8 @@ export default defineConfig(async ({ command, isPreview }): Promise<UserConfig> 
       const outputDir = isRemote ? `${OUTDIR}/docs` : "docs"
       const app = await TypeDoc.Application.bootstrapWithPlugins({
         entryPoints: ["lib/index.ts"],
-        plugin: ["@mxssfd/typedoc-theme"],
         out: outputDir,
         basePath: isRemote ? `${ID}/docs` : "/",
-        theme: "my-theme"
-
       });
       const project = await app.convert();
       if (project) {

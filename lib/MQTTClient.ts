@@ -1,10 +1,21 @@
-import MQTT from "paho-mqtt";
+import type {
+	ConnectionOptions,
+	IClient,
+	Qos,
+	Status,
+	SubscribeOptions,
+	SubscriptionCallback,
+	TConstruableClient,
+	Unsubscribe,
+	UnsubscribeOptions,
+	WithInvocationContext,
+} from "./types";
 
 /**
  * @interface
  * Options for the connection to broker.
  */
-export interface MQTTClientOptions extends MQTT.ConnectionOptions {
+export interface MQTTClientOptions extends ConnectionOptions {
 	/**
 	 * The Messaging client identifier, between 1 and 23 characters in length.
 	 * @default "mqtt-websocket-client"
@@ -31,38 +42,11 @@ export interface MQTTClientOptions extends MQTT.ConnectionOptions {
 	hostUri?: string;
 }
 
-/**
- * The status of the client
- */
-export type Status = "connected" | "connecting" | "disconnected" | "error";
-/**
- * A message from the broker
- * @eventProperty
- */
-export type MessageEvent = CustomEvent<MQTT.Message>;
-
-/**
- * Client state change event
- * @eventProperty
- */
-export type StatusEvent = CustomEvent<{
-	type: Status;
-	ctx: MQTT.WithInvocationContext | null;
-}>;
-/**
- * Function for handling unsubscribing from a filter
- */
-export type Unsubscribe = (options?: MQTT.UnsubscribeOptions) => boolean;
-/**
- * Function for handling a message for a subscription
- */
-export type SubscriptionCallback = (evt: MessageEvent) => void;
-
 const SEPARATOR = "/";
 const SINGLE = "+";
 const ALL = "#";
 
-export class MQTTClient extends EventTarget {
+export class MQTTClient<T extends IClient = IClient> extends EventTarget {
 	/**
 	 * Error Event
 	 *
@@ -89,26 +73,30 @@ export class MQTTClient extends EventTarget {
 	 */
 	public static EVENT_FILTER = "filter";
 
-	#mountCount = 0;
+	private mountCount = 0;
 	private topics_with_wilds: Map<string, number> = new Map();
 	private topics: Map<string, number> = new Map();
 	private status: Status = "disconnected";
-	private client: MQTT.Client;
 	private isConnecting = false;
+	private client: T;
 	private connectionOptions;
-	constructor({
-		host = "localhost",
-		port = 9001,
-		path = "/mqtt",
-		clientId = "mqtt-websocket-client",
-		hostUri,
-		...options
-	}: MQTTClientOptions) {
+	constructor(
+		{
+			host = "localhost",
+			port = 9001,
+			path = "/mqtt",
+			clientId = "mqtt-websocket-client",
+			hostUri,
+			...options
+		}: MQTTClientOptions,
+		Ctor: TConstruableClient<T>,
+	) {
 		super();
 		this.connectionOptions = options;
+
 		this.client = hostUri
-			? new MQTT.Client(hostUri, clientId)
-			: new MQTT.Client(host, port, path, clientId);
+			? new Ctor(hostUri, clientId)
+			: new Ctor(host, port, path, clientId);
 		this.client.onConnectionLost = () => {
 			this.isConnecting = false;
 			this.setState("disconnected", null);
@@ -162,7 +150,7 @@ export class MQTTClient extends EventTarget {
 		return patternLength === topicLength;
 	}
 
-	private setState(type: Status, ctx: MQTT.WithInvocationContext | null) {
+	private setState(type: Status, ctx: WithInvocationContext | null) {
 		this.status = type;
 		this.emit(MQTTClient.EVENT_STATE, { type, ctx });
 	}
@@ -217,8 +205,8 @@ export class MQTTClient extends EventTarget {
 	 * @return {*}
 	 */
 	public mount(): void {
-		this.#mountCount++;
-		if (this.#mountCount !== 1) return;
+		this.mountCount++;
+		if (this.mountCount !== 1) return;
 
 		this.connect(this.connectionOptions);
 	}
@@ -227,8 +215,8 @@ export class MQTTClient extends EventTarget {
 	 * On unmount disconnect client
 	 */
 	public unmount(): void {
-		this.#mountCount--;
-		if (this.#mountCount !== 0) return;
+		this.mountCount--;
+		if (this.mountCount !== 0) return;
 		this.disconnect();
 	}
 
@@ -258,11 +246,12 @@ export class MQTTClient extends EventTarget {
 	 * @param {Paho.MQTT.ConnectionOptions} [options={}]
 	 * @return {void}
 	 */
-	public connect(options: MQTT.ConnectionOptions = {}): void {
+	public connect(options: Parameters<T["connect"]>[0] = {}): void {
 		if (this.client.isConnected() || this.isConnecting) return;
 		this.isConnecting = true;
 		this.setState("connecting", null);
 		this.client.connect({
+			...this.connectionOptions,
 			...options,
 			onFailure: (ev) => {
 				this.setState("error", ev);
@@ -289,7 +278,7 @@ export class MQTTClient extends EventTarget {
 	public publish(
 		topic: string,
 		payload: string | ArrayBuffer,
-		qos: MQTT.Qos = 0,
+		qos: Qos = 0,
 		retained = false,
 	): boolean {
 		if (this.client.isConnected()) {
@@ -318,7 +307,7 @@ export class MQTTClient extends EventTarget {
 	public subscribe(
 		topic: string,
 		callback: SubscriptionCallback,
-		options?: MQTT.SubscribeOptions,
+		options?: SubscribeOptions,
 	): Unsubscribe {
 		// Have to type callback as EventListener because addVentListener only likes Event and not CustomEvent
 		this.addEventListener(
@@ -339,9 +328,13 @@ export class MQTTClient extends EventTarget {
 			},
 		});
 
-		return (options?: MQTT.UnsubscribeOptions) => {
+		return (options?: UnsubscribeOptions) => {
 			if (!this.client.isConnected()) {
-				options?.onFailure?.call(this, options?.invocationContext);
+				options?.onFailure?.call(this, {
+					invocationContext: options?.invocationContext,
+					errorCode: -1,
+					errorMessage: "Failed to unsubscribe due to connection error",
+				});
 				return false;
 			}
 			this.removeEventListener(
@@ -393,15 +386,12 @@ export class MQTTClient extends EventTarget {
 
 	/**
 	 * Start tracing.
-	 *
-	 * @return {void} {void}
 	 */
-	public startTrace(): void {
+	public startTrace() {
 		return this.client.startTrace();
 	}
 	/**
 	 * Stop tracing.
-	 * @return {void} {void}
 	 */
 	public stopTrace(): void {
 		this.client.stopTrace();

@@ -1,12 +1,16 @@
-import type MQTT from "paho-mqtt";
 import { useEffect } from "react";
-import type { SubscriptionCallback, Unsubscribe } from "./MQTTClient";
+import type {
+	SubscribeOptions,
+	SubscriptionCallback,
+	Unsubscribe,
+	UnsubscribeOptions,
+} from "./types";
 import { useMqtt } from "./useMqtt";
 import { useMqttState } from "./useMqttState";
 
 type Options = {
-	subscribe?: MQTT.SubscribeOptions;
-	unsubscribe?: MQTT.UnsubscribeOptions;
+	subscribe?: SubscribeOptions;
+	unsubscribe?: UnsubscribeOptions;
 };
 
 /**

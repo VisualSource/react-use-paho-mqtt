@@ -2,11 +2,6 @@ import { useEffect } from "react";
 import type { MQTTClient } from "./MQTTClient";
 import { mqttContext } from "./mqttContext";
 
-/**
- *
- * @param param0
- * @returns
- */
 export function MqttProvider({
 	children,
 	client,

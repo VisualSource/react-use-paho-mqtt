@@ -1,15 +1,15 @@
 import { cleanup, render, renderHook } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
-import { MQTTClient, type SubscriptionCallback } from "../MQTTClient";
+import type { SubscriptionCallback } from "../types";
 import { useSubscription } from "../useSubscription";
-import { config, createWrapper, waitForState } from "./testUtils";
+import { config, createWrapper, makeClient, waitForState } from "./testUtils";
 
 const MESSAGE_A = "/test/message";
 const MESSAGE_B = "/test/message/world";
 
 describe("useSubscription", () => {
 	it("subscription is added on connect", async () => {
-		const client = new MQTTClient(config.unencrypted_unauthenticated);
+		const client = makeClient(config.unencrypted_unauthenticated);
 		const onMessage: SubscriptionCallback = () => {};
 		renderHook(
 			() =>
@@ -29,7 +29,7 @@ describe("useSubscription", () => {
 	});
 
 	it("subscription is removed on unmount", async () => {
-		const client = new MQTTClient(config.unencrypted_unauthenticated);
+		const client = makeClient(config.unencrypted_unauthenticated);
 
 		const onMessage: SubscriptionCallback = () => {};
 
@@ -63,7 +63,7 @@ describe("useSubscription", () => {
 
 	it("Does not create subscription if not connected", async () => {
 		const onMessage: SubscriptionCallback = () => {};
-		const client = new MQTTClient(config.bad_host);
+		const client = makeClient(config.bad_host);
 		renderHook(
 			() =>
 				useSubscription(MESSAGE_A, onMessage, {

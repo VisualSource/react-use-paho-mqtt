@@ -1,42 +1,39 @@
 import "@testing-library/jest-dom/vitest";
 import { cleanup, render } from "@testing-library/react";
-import { afterEach, describe, expect, test } from "vitest";
-import type { MQTTClient } from "../MQTTClient";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { MqttProvider } from "../MqttProvider";
-import { TestClient } from "./testUtils";
+import { makeFakeClient } from "./testUtils";
 
 describe("MQTTProvider", () => {
-	test("should mount once", () => {
-		const client = new TestClient();
-		render(
-			<MqttProvider client={client as never as MQTTClient}>
-				Content
-			</MqttProvider>,
-		);
+	it("should mount once", () => {
+		const client = makeFakeClient();
+		const spyMount = vi.spyOn(client, "mount");
+		render(<MqttProvider client={client}>Content</MqttProvider>);
 
-		expect(client.mountCount).toBe(1);
+		expect(spyMount).toHaveBeenCalledOnce();
 	});
 
-	test("should pass content", () => {
-		const client = new TestClient();
+	it("should pass children", () => {
+		const client = makeFakeClient();
 		const { getByText } = render(
-			<MqttProvider client={client as never as MQTTClient}>
-				Content
-			</MqttProvider>,
+			<MqttProvider client={client}>Content</MqttProvider>,
 		);
 		expect(getByText(/Content/i)).toBeInTheDocument();
 	});
 
-	test("should unmount", () => {
-		const client = new TestClient();
+	it("should unmount", () => {
+		const client = makeFakeClient();
+
+		const spyMount = vi.spyOn(client, "mount");
+		const spyUnmpunt = vi.spyOn(client, "unmount");
+
 		const { unmount } = render(
-			<MqttProvider client={client as never as MQTTClient}>
-				Content
-			</MqttProvider>,
+			<MqttProvider client={client}>Content</MqttProvider>,
 		);
-		expect(client.mountCount).toBe(1);
+
+		expect(spyMount).toHaveBeenCalledOnce();
 		unmount();
-		expect(client.mountCount).toBe(0);
+		expect(spyUnmpunt).toHaveBeenCalledOnce();
 	});
 
 	afterEach(() => {

@@ -8,15 +8,15 @@ import { mqttContext } from "./mqttContext";
  * @returns
  */
 export function MqttProvider({
-  children,
-  client,
+	children,
+	client,
 }: React.PropsWithChildren<{ client: MQTTClient }>) {
-  useEffect(() => {
-    client.mount();
-    return () => {
-      client.unmount();
-    };
-  }, [client]);
+	useEffect(() => {
+		client.mount();
+		return () => {
+			client.unmount();
+		};
+	}, [client]);
 
-  return <mqttContext.Provider value={client}>{children}</mqttContext.Provider>;
+	return <mqttContext.Provider value={client}>{children}</mqttContext.Provider>;
 }

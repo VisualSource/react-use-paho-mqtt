@@ -1,12 +1,12 @@
+import type MQTT from "paho-mqtt";
 import { useEffect } from "react";
-import MQTT from "paho-mqtt";
 import type { SubscriptionCallback, Unsubscribe } from "./MQTTClient";
-import { useMqttState } from "./useMqttState";
 import { useMqtt } from "./useMqtt";
+import { useMqttState } from "./useMqttState";
 
 type Options = {
-  subscribe?: MQTT.SubscribeOptions;
-  unsubscribe?: MQTT.UnsubscribeOptions;
+	subscribe?: MQTT.SubscribeOptions;
+	unsubscribe?: MQTT.UnsubscribeOptions;
 };
 
 /**
@@ -15,21 +15,21 @@ type Options = {
  * @param callback
  */
 export const useSubscription = (
-  topic: string,
-  callback: SubscriptionCallback,
-  opt?: Options,
+	topic: string,
+	callback: SubscriptionCallback,
+	opt?: Options,
 ) => {
-  const state = useMqttState();
-  const mqtt = useMqtt();
+	const state = useMqttState();
+	const mqtt = useMqtt();
 
-  useEffect(() => {
-    let unsub: Unsubscribe | undefined;
+	useEffect(() => {
+		let unsub: Unsubscribe | undefined;
 
-    if (state === "connected") {
-      unsub = mqtt.subscribe(topic, callback, opt?.subscribe);
-    }
-    return () => {
-      if (unsub) unsub(opt?.unsubscribe);
-    };
-  }, [topic, callback, mqtt, state, opt]);
+		if (state === "connected") {
+			unsub = mqtt.subscribe(topic, callback, opt?.subscribe);
+		}
+		return () => {
+			if (unsub) unsub(opt?.unsubscribe);
+		};
+	}, [topic, callback, mqtt, state, opt]);
 };

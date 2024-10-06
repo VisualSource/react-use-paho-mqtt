@@ -1,3 +1,4 @@
+import { EventEmitter } from "./EventEmitter";
 import type {
 	ConnectionOptions,
 	IClient,
@@ -46,7 +47,7 @@ const SEPARATOR = "/";
 const SINGLE = "+";
 const ALL = "#";
 
-export class MQTTClient<T extends IClient = IClient> extends EventTarget {
+export class MQTTClient<T extends IClient = IClient> extends EventEmitter {
 	/**
 	 * Error Event
 	 *

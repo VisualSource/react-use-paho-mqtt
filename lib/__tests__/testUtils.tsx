@@ -35,7 +35,7 @@ class FakeMQTTClient implements IClient {
 	onMessageArrived(_ev: Message): void {
 		throw new Error("Method not implemented.");
 	}
-	connect(_opt?: ConnectionOptions): void {}
+	connect(_opt?: ConnectionOptions): void { }
 	isConnected(): boolean {
 		return true;
 	}
@@ -51,7 +51,7 @@ class FakeMQTTClient implements IClient {
 	stopTrace(): void {
 		throw new Error("Method not implemented.");
 	}
-	disconnect(): void {}
+	disconnect(): void { }
 	getTraceLog(): unknown[] {
 		throw new Error("Method not implemented.");
 	}
@@ -144,7 +144,7 @@ export function waitForState(
 			reject("Client state change took too long.");
 		}, 5000);
 
-		client.addEventListener("state", callback, { once: true });
+		client.addEventListener("state", callback/*, { once: true }*/);
 	});
 }
 
